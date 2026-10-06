@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lirik Melayang</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(180deg, #1a0b1f, #3b1230);
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+    }
+    #mulai {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      font-size: 22px;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 24px;
+      background: #ff4f6d;
+      color: white;
+      cursor: pointer;
+    }
+    .hatiLirik {
+      position: fixed;
+      bottom: -240px;
+      z-index: 5;
+      animation: naik linear forwards;
+    }
+    .hatiLirik svg { width: 100%; height: auto; display: block; }
+    .hatiLirik span {
+      position: absolute;
+      top: 28%; left: 18%; right: 18%;
+      color: white;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    @keyframes naik {
+      0%   { transform: translateY(0) translateX(0) rotate(-4deg); opacity: 0; }
+      8%   { opacity: 1; }
+      25%  { transform: translateY(-30vh) translateX(25px) rotate(4deg); }
+      50%  { transform: translateY(-60vh) translateX(-25px) rotate(-4deg); }
+      75%  { transform: translateY(-90vh) translateX(25px) rotate(4deg); opacity: 1; }
+      100% { transform: translateY(-130vh) translateX(0) rotate(0deg); opacity: 0; }
+    }
+    .kecil {
+      position: fixed;
+      bottom: -30px;
+      pointer-events: none;
+      animation: naikKecil linear forwards;
+    }
+    @keyframes naikKecil {
+      to { transform: translateY(-115vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <button id="mulai" onclick="mulai()">Mulai ♥</button>
+
+  <script>
+    // Tempel tulisanmu di antara dua tanda backtick, satu baris per baris
+    var teksLirik = `
+still got your things here
+And they stare at me like souvenirs
+Don't wanna let you out my head
+Just like the day that I met you
+The day I thought forever
+Said that you love me
+But that'll last for never
+It's cold outside
+Like when you walked out my life
+Why you walk out my life?
+`;
+
+    var baris = teksLirik.trim().split("\n");
+
+    var warna = ["#d90429", "#ef233c", "#f25c2a", "#e63946", "#ff4d6d"];
+    var urut = 0;
+
+    function buatHatiLirik(teks) {
+      var ukuran = 150 + Math.random() * 60;
+      var el = document.createElement("div");
+      el.className = "hatiLirik";
+      el.style.width = ukuran + "px";
+      el.style.left = (5 + Math.random() * 70) + "vw";
+      el.style.animationDuration = (11 + Math.random() * 4) + "s";
+      var w = warna[Math.floor(Math.random() * warna.length)];
+      el.innerHTML =
+        '<svg viewBox="0 0 32 29.6"><path fill="' + w + '" d="M23.6 0c-3.4 0-6.3 2.7-7.6 5.6C14.7 2.7 11.8 0 8.4 0 3.8 0 0 3.8 0 8.4c0 9.4 9.5 11.9 16 21.2 6.1-9.3 16-12.1 16-21.2C32 3.8 28.2 0 23.6 0z"/></svg>' +
+        '<span style="font-size:' + (ukuran / 9) + 'px"></span>';
+      el.querySelector("span").innerText = teks;
+      document.body.appendChild(el);
+      setTimeout(function () { el.remove(); }, 16000);
+    }
+
+    function hatiKecil() {
+      var h = document.createElement("div");
+      h.className = "kecil";
+      h.innerText = "♥";
+      h.style.left = Math.random() * 98 + "vw";
+      h.style.fontSize = (8 + Math.random() * 14) + "px";
+      h.style.color = warna[Math.floor(Math.random() * warna.length)];
+      h.style.opacity = 0.5 + Math.random() * 0.5;
+      h.style.animationDuration = (6 + Math.random() * 6) + "s";
+      document.body.appendChild(h);
+      setTimeout(function () { h.remove(); }, 12000);
+    }
+
+    function mulai() {
+      document.getElementById("mulai").style.display = "none";
+      buatHatiLirik(baris[urut]);
+      urut = (urut + 1) % baris.length;
+      setInterval(function () {
+        buatHatiLirik(baris[urut]);
+        urut = (urut + 1) % baris.length;
+      }, 3500);
+      setInterval(hatiKecil, 300);
+    }
+  </script>
+</body>
+</html>
